@@ -15,8 +15,6 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-let visibleGoods = [...goodsFromServer];
-
 const SORT_NAME = 'alphabetically';
 const SORT_LENGTH = 'length';
 const SORT_RESET = '';
@@ -25,25 +23,23 @@ export const App = () => {
   const [sortField, setSortField] = useState(SORT_RESET);
   const [reverse, setReverse] = useState(false);
 
-  if (sortField === SORT_RESET) {
-    visibleGoods = [...goodsFromServer];
-  } else {
-    visibleGoods.sort((good1, good2) => {
-      if (sortField === SORT_LENGTH) {
-        return good1.length - good2.length;
-      }
+  const getVisibleGoods = () => {
+    const result = [...goodsFromServer];
 
-      if (sortField === SORT_NAME) {
-        return good1.localeCompare(good2);
-      }
+    if (sortField === SORT_LENGTH) {
+      result.sort((good1, good2) => good1.length - good2.length);
+    }
 
-      if (reverse) {
-        return -1;
-      }
+    if (sortField === SORT_NAME) {
+      result.sort((good1, good2) => good1.localeCompare(good2));
+    }
 
-      return 0;
-    });
-  }
+    if (reverse) {
+      result.reverse();
+    }
+
+    return result;
+  };
 
   return (
     <div className="section content">
@@ -92,7 +88,7 @@ export const App = () => {
       </div>
 
       <ul>
-        {visibleGoods.map(good => (
+        {getVisibleGoods().map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
